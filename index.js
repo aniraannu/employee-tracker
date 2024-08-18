@@ -31,6 +31,7 @@ pool.connect();
 function startPrompt() {
   inquirer
     .prompt([
+      //List of things to do using the application
       {
         name: "start",
         type: "list",
@@ -97,4 +98,38 @@ function addDepartment() {
     });
 }
 //Function to add a role
+pool.query('SELECT * FROM department', (err, res) => {
+  if (err) {
+    console.log(err);
+    return;
+  }
+  //Get the department choices from the database
+  const departments = res.map(({name, id})=>({name, id}));
+  inquirer
+    .prompt([
+      {
+        name: "title",
+        type: "input",
+        message: "What is the title of the role?"
+      },
+      {
+        name: "salary",
+        type: "input",
+        message: "What is the salary of the role?"
+      },
+      {
+        name: "department",
+        type: "list",
+        message: "What department does the role belong to?",
+        choices: [...departments.map(({ name, id }) => ({ name, value: id }), { name: "Create a New Department", value: null })]
+  
+      }
+    ]).then(data => {
+      pool.query('INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3)', [data.title, data.salary, data.department], (err, res) => {
+        if (err) throw err;
+        console.log(`Added ${data.title} to roles.`);
+        startPrompt();
+      });
+    });
+});
 //Function to add an employee
