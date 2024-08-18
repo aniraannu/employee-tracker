@@ -11,6 +11,7 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 // Connect to database
+//Setting up mysql connection
 const pool = new Pool(
   {
     //PostgreSQL username
@@ -18,8 +19,8 @@ const pool = new Pool(
     // PostgreSQL password
     password: 'Leahrose',
     host: 'localhost',
-    database: 'movies_db'
+    database: 'company_db'
   },
-  console.log(`Connected to the movies_db database.`)
+  console.log(`Connected to company_db database.`)
 )
 pool.connect();
