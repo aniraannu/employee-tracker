@@ -104,9 +104,10 @@ function addRole() {
           console.log(err);
           return;
       }
-
+console.log(res.rows);
       // gets all the department names and ids from the response and puts it into an array called departments
-      const departments = res.map(({ name, id }) => ({ name, id }));
+      const departments = res.rows.map(({ name, id }) => ({ name, id }));
+      //const departments = res.map(({ name, id }) => ({ name, id }));
      //Use inquirer prompt to ask questions
       inquirer.prompt([
         //What is the name of the role?
@@ -179,12 +180,12 @@ function addEmployee() {
       if (err) {
           console.log(err);
       } else {
-          pool.query("SELECT name, id FROM employee", (err, managerRes) => {
+          pool.query("SELECT first_name, last_name, id FROM employee", (err, managerRes) => {
               if (err) {
                   console.log(err);
               } else {
-                  const roles = roleRes.map(({ title, id }) => ({ name: title, value: id }));
-                  const managers = managerRes.map(({first_name, last_name, id})=> ({name: `${first_name}, ${last_name}`, value: id}));
+                  const roles = roleRes.rows.map(({ title, id }) => ({ name: title, value: id }));
+                  const managers = managerRes.rows.map(({first_name, last_name, id})=> ({name: `${first_name}, ${last_name}`, value: id}));
 
                   //Getting user input to add a new employe using inquirer prompt
                   inquirer.prompt([
