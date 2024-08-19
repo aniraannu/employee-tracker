@@ -239,7 +239,7 @@ function updateEmployeeRole() {
       if(err) {
           console.log(err);
       } else {
-          const employees = employeeRes.map(({id, first_name, last_name}) => ({name: `${first_name} ${last_name}`, value: id}));
+          const employees = employeeRes.rows.map(({id, first_name, last_name}) => ({name: `${first_name} ${last_name}`, value: id}));
 
           inquirer.prompt([
               {
@@ -253,7 +253,7 @@ function updateEmployeeRole() {
                   if(err) {
                       console.log(err);
                   } else {
-                      const roles = rolesRes.map(({id, title}) => ({name: title, value: id}));
+                      const roles = roleRes.rows.map(({id, title}) => ({name: title, value: id}));
 
                       inquirer.prompt([
                           {
