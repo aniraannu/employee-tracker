@@ -277,3 +277,9 @@ function updateEmployeeRole() {
       }
   });
 }
+//Call the start prompt function
+startPrompt();
+
+app.listen(PORT, () => {
+    console.log(`You are now listening on (${PORT}) http://localhost:${PORT}.`);
+});

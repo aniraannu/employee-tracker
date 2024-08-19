@@ -1,30 +1,30 @@
+--Drop the database if it already exists
 DROP DATABASE IF EXISTS employees_db;
+--Create a new database called employees_db
 CREATE DATABASE employees_db;
 
 \c employees_db;
-
-CREATE TABLE department (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(30) UNIQUE NOT NULL
+--Create a new table called employee
+CREATE TABLE employee (
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(30) NOT NULL,
+    last_name VARCHAR(30) NOT NULL,
+    role_id INT,
+    manager_id INT
 );
 
+--Create a new table called role
 CREATE TABLE role (
     id SERIAL PRIMARY KEY,
     title VARCHAR(30) UNIQUE NOT NULL,
     salary DECIMAL NOT NULL,
     department_id INT NOT NULL,
-    FOREIGN KEY (department_id),
-    REFERENCES department(id)
-    ON DELETE SET NULL
+);
+--Create a new table called department
+CREATE TABLE department (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(30) UNIQUE NOT NULL
 );
 
-CREATE TABLE employee (
-    id SERIAL PRIMARY KEY,
-    first_name VARCHAR(30) NOT NULL,
-    last_name VARCHAR(30) NOT NULL,
-    role_id INTEGER NOT NULL,
-    FOREIGN KEY (role_id),
-    REFERENCES role(id)
-    ON DELETE SET NULL
-    manager_id INT
-)
+
+
