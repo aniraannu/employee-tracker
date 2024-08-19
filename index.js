@@ -173,3 +173,62 @@ function addRole() {
   });
 }
 //Function to add an employee
+function addEmployee() {
+  //
+  pool.query("SELECT title, id FROM role", (err, roleRes) => {
+      if (err) {
+          console.log(err);
+      } else {
+          pool.query("SELECT name, id FROM employee", (err, managerRes) => {
+              if (err) {
+                  console.log(err);
+              } else {
+                  const roles = roleRes.map(({ title, id }) => ({ name: title, value: id }));
+                  const managers = managerRes.map(({first_name, last_name, id})=> ({name: `${first_name}, ${last_name}`, value: id}));
+
+                  //Getting user input to add a new employe using inquirer prompt
+                  inquirer.prompt([
+                    //First Name
+                      {
+                          name: "firstName",
+                          type: "input",
+                          message: "What is the employees first name?"
+                      },
+                    //Last Name
+                      {
+                          name: "lastName",
+                          type: "input",
+                          message: "What is the employees last name?"
+                      },
+                    //Role
+                      {
+                          name: "role",
+                          type: "list",
+                          message: "What is the employees role?",
+                          choices: [...roles]
+                      },
+                    //Managers Name
+                      {
+                          name: "manager",
+                          type: "list",
+                          message: "Who is the manager for this employee?",
+                          choices: [...managers, {name: "No Manager", value: null}]
+                      }
+                  ]).then(data => {
+                    //Adding the employee to the database
+                      pool.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ($1, $2, $3, $4)", [data.firstName, data.lastName, data.role, data.manager], (err, res) => {
+                          if (err) {
+                              console.log(err);
+                          } else {
+                              console.log("Employee added successfully");
+                              startPrompt();
+                          }
+                      })
+                  });
+              }    
+              
+          });
+      }
+      
+  });
+}
