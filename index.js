@@ -232,3 +232,48 @@ function addEmployee() {
       
   });
 }
+//function to update the employee role
+function updateEmployeeRole() {
+  pool.query("SELECT id, first_name, last_name FROM employee", (err, employeeRes) => {
+      if(err) {
+          console.log(err);
+      } else {
+          const employees = employeeRes.map(({id, first_name, last_name}) => ({name: `${first_name} ${last_name}`, value: id}));
+
+          inquirer.prompt([
+              {
+                  name: "employee",
+                  type: "list",
+                  message: "Which employee would you like to update?",
+                  choices: [...employees]
+              } 
+          ]).then(employeeAnswer => {
+              pool.query("SELECT id, title FROM role", (err, roleRes) => {
+                  if(err) {
+                      console.log(err);
+                  } else {
+                      const roles = rolesRes.map(({id, title}) => ({name: title, value: id}));
+
+                      inquirer.prompt([
+                          {
+                              name: "role",
+                              type: "list",
+                              message: "What is the updated new role for the employee?",
+                              choices: [...roles]
+                          }
+                      ]).then(roleAnswer => {
+                          pool.query("UPDATE employee SET role_id = $1 WHERE id = $2", [roleAnswer.role, employeeAnswer.employee], (err, res) => {
+                              if(err) {
+                                  console.log(err);
+                              } else {
+                                  console.log("Employee role updated successfully");
+                                  startPrompt();
+                              }
+                          })
+                      })
+                  }
+              })
+          })
+      }
+  });
+}
